@@ -1,5 +1,6 @@
 #include "MainContentComponent.h"
 #include "Constants.h"
+#include "PluginEditor.h"
 
 //==============================================================================
 MainContentComponent::MainContentComponent(JarEQAudioProcessor& p) :
@@ -59,5 +60,41 @@ void MainContentComponent::resized()
         gainSliders[i]->setBounds(130, y, 100, height);
         QSliders[i]->setBounds(240, y, 100, height);
         y += height + 10;
+    }
+}
+
+
+//==============================================================================
+MainContentComponent::MainContentComponent()
+{
+    setSize (800, 600);
+    
+    addAndMakeVisible(freqSlider);
+    freqSlider.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    freqSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 50, 25);
+    freqSlider.setRange(20.0, 20000.0, 0.1);
+    freqSlider.setValue(1000.0);
+    freqSlider.addListener(this);
+}
+
+MainContentComponent::~MainContentComponent()
+{
+}
+
+void MainContentComponent::paint (juce::Graphics& g)
+{
+    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
+}
+
+void MainContentComponent::resized()
+{
+    freqSlider.setBounds(200,200,400,400);
+}
+
+void MainContentComponent::sliderValueChanged(juce::Slider* slider)
+{
+    if(slider == &freqSlider)
+    {
+        pluginProcessor.setFrequency(freqSlider.getValue());
     }
 }
